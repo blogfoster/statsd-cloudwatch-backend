@@ -5,7 +5,7 @@ var expect  = require('chai').expect,
     backend = require('../lib/backend')
     _       = require('underscore')
 
-describe.only('init', function() {
+describe('init', function() {
   describe('#init', function () {
     before(function () {
       sinon.stub(AWS.MetadataService.prototype, 'request')
