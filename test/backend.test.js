@@ -211,6 +211,46 @@ describe('flushing gauges', function() {
   })
 })
 
+describe('whitelisting', function (argument) {
+  before(function () {
+    this.cloudwatch = new Fake.CloudWatch()
+    this.backend = new Backend({
+      client: this.cloudwatch, namespace: 'abc.123', whitelist: ['api\\.']
+    })
+  })
+
+  beforeEach(function() {
+    this.backend.flush(Fixture.timestamp, {
+      counters: _.extend(Fixture.counters, { 'api2.request_count': 100 })
+    })
+  })
+
+  it('should send only counters that match the whitelist', function() {
+    expect(this.cloudwatch.params[0].MetricData).to.have.length(1)
+    expect(this.cloudwatch.params[0].MetricData[0].MetricName).to.equal('api.request_count')
+  })
+})
+
+describe('blacklisting', function (argument) {
+  before(function () {
+    this.cloudwatch = new Fake.CloudWatch()
+    this.backend = new Backend({
+      client: this.cloudwatch, namespace: 'abc.123', blacklist: ['api\\.', 'statsd\\.']
+    })
+  })
+
+  beforeEach(function() {
+    this.backend.flush(Fixture.timestamp, {
+      counters: _.extend(Fixture.counters, { 'api2.request_count': 100 })
+    })
+  })
+
+  it('should send only counters that match the whitelist', function() {
+    expect(this.cloudwatch.params[0].MetricData).to.have.length(1)
+    expect(this.cloudwatch.params[0].MetricData[0].MetricName).to.equal('api2.request_count')
+  })
+})
+
 describe('status', function() {
   var cloudwatch = new Fake.CloudWatch()
   var backend = new Backend({

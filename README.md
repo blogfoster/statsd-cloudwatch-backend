@@ -36,8 +36,16 @@ Add the following basic configuration information to the StatsD configuration fi
             region: "us-west-2",
             dimensions: {},
             accessKeyId:  "<YOUR ACCESS KEY ID>",
-            secretAccessKey: "<YOUR SECRET ACCESS KEY>"
+            secretAccessKey: "<YOUR SECRET ACCESS KEY>",
+            whitelist: [".*"],
+            blacklist: ["statsd\\."]
         }
     }
 
 The *namespace*, and *region* settings are required. The *dimensions* map is optional. The *accessKeyId* and *secretAccessKey* settings are not required if the EC2 instance is configured with an instance-profile with permissions to write to CloudWatch.
+The *whitelist* and *blacklist* settings are both optional.
+
+### White- and Blacklisting
+
+A given metric will only be sent to AWS Cloudwatch if there is at least one matching whitelist entry and no
+matching blacklist entry.
