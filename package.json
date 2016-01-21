@@ -14,13 +14,14 @@
   "main": "lib/init.js",
   "dependencies": {
     "fmt": "~0.4",
-    "underscore": "1.4.x",
+    "underscore": "^1.8.3",
     "aws-sdk": "2.0.x"
   },
   "devDependencies": {
     "chai": "~1.4.2",
-    "mocha": "*",
-    "statsd": "^0.7.2"
+    "mocha": "^2.3.4",
+    "statsd": "^0.7.2",
+    "sinon": "^1.17.2"
   },
   "optionalDependencies": {},
   "scripts": {

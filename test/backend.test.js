@@ -2,7 +2,7 @@ var expect  = require('chai').expect,
     _       = require('underscore'),
     Fixture = require('./fixture'),
     Fake    = require('./fake'),
-    Backend = require('../lib/backend.js')
+    Backend = require('../lib/backend.js').Backend
 
 describe('new backend', function() {
   var backend = new Backend()
@@ -62,7 +62,7 @@ describe('flushing counters', function() {
   var metric = null
   var cloudwatch = new Fake.CloudWatch()
   var backend = new Backend({
-    client: cloudwatch, namespace: 'abc.123', dimensions: { 'InstanceId': 'i-xyz' }
+    client: cloudwatch, namespace: 'abc.123'
   })
 
   beforeEach(function() {
@@ -93,11 +93,9 @@ describe('flushing counters', function() {
     expect(metric.Timestamp.getTime()).to.equal(Fixture.now.getTime())
   })
 
-  it('should send a dimension', function() {
+  it('should not send a dimension', function() {
     var dimensions = metric.Dimensions
-    expect(dimensions).to.have.length(1)
-    expect(dimensions[0]['Name']).to.equal('InstanceId')
-    expect(dimensions[0]['Value']).to.equal('i-xyz')
+    expect(dimensions).to.have.length(0)
   })
 
   it('should not send a statsd counter', function() {
