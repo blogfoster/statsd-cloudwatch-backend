@@ -1,16 +1,16 @@
-var _ = require('underscore')
+class CloudWatch {
+  constructor() {
+    // this.Namespace = ''
+    // this.MetricData = []
+    this.params = [];
+  }
 
-var Fake = module.exports = {
-  CloudWatch: function() {
-    //this.Namespace = ''
-    //this.MetricData = []
-    this.params = []
-  },
+  putMetricData(params, complete) {
+    this.params.push(params);
+    complete(null, {});
+  }
 }
 
-_.extend(Fake.CloudWatch.prototype, {
-  putMetricData: function(params, complete) {
-    this.params.push(params);
-    complete(null, {})
-  }
-})
+export default {
+  CloudWatch
+};
