@@ -264,6 +264,40 @@ describe('blacklisting', function () {
   });
 });
 
+describe('limiting metrics', function () {
+  before(function () {
+    this.cloudwatch = new Fake.CloudWatch();
+    this.backend = new Backend({
+      client: this.cloudwatch,
+      metricsLimit: 1
+    });
+  });
+
+  before('send many counters in a first run', function () {
+    this.backend.flush(Fixture.timestamp, {
+      counters: Fixture.manyCounters
+    });
+  });
+
+  before('send many counters in a second run', function () {
+    this.backend.flush(Fixture.timestamp, {
+      counters: Fixture.manyCounters
+    });
+  });
+
+  it('should send only metrics until the limit was reached', function () {
+    expect(this.cloudwatch.params[0].MetricData.length).to.equal(1);
+  });
+
+  it('should send metrics that were already sent but now is the limit reached', function () {
+    expect(this.cloudwatch.params.length).to.equal(2);
+    expect(this.cloudwatch.params[1].MetricData.length).to.equal(1);
+
+    const metricName = this.cloudwatch.params[0].MetricData[0].MetricName;
+    expect(metricName).to.equal(this.cloudwatch.params[1].MetricData[0].MetricName);
+  });
+});
+
 describe('status', function () {
   const cloudwatch = new Fake.CloudWatch();
   const backend = new Backend({
