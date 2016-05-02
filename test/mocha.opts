@@ -1,0 +1,6 @@
+--compilers js:babel-core/register
+--recursive
+--sort
+--check-leaks
+--colors
+--reporter spec
